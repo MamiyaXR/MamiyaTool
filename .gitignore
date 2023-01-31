@@ -2,6 +2,10 @@
 /Logs
 /Temp
 /UserSettings
-/.gitattributes
 /.vsconfig
 /MamiyaTool.sln
+/.vs
+/Assembly-CSharp.csproj
+/Assembly-CSharp-Editor.csproj
+/ExtendedTransformInspector.csproj
+/obj
