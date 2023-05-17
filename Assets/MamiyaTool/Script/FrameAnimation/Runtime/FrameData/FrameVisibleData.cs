@@ -5,14 +5,15 @@ using UnityEngine;
 
 namespace MamiyaTool {
     [Serializable]
-    public class FrameSpriteData : FrameDataBase {
-        [SerializeField] private Sprite frame;
+    public class FrameVisibleData : FrameDataBase {
+        [SerializeField] private bool visible;
 
-        public Sprite Frame => frame;
+        public bool Visible => visible;
+
         public override FrameDataBase Clone() {
-            FrameSpriteData result = new FrameSpriteData();
+            FrameVisibleData result = new FrameVisibleData();
             CopyTo(result);
-            result.frame = frame;
+            result.visible = visible;
             return result;
         }
     }

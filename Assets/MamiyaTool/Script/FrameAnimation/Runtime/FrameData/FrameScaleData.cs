@@ -13,5 +13,11 @@ namespace MamiyaTool {
         public FrameScaleData() {
             localScale = Vector3.one;
         }
+        public override FrameDataBase Clone() {
+            FrameScaleData result = new FrameScaleData();
+            CopyTo(result);
+            result.localScale = localScale;
+            return result;
+        }
     }
 }

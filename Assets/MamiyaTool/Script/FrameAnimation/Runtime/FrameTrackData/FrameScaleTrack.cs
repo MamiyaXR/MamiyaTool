@@ -9,5 +9,10 @@ namespace MamiyaTool {
         protected override void Invoke() {
             Component.localScale = frames[curFrameIndex].LocalScale;
         }
+        public override FrameTrackBase Clone() {
+            FrameScaleTrack result = new FrameScaleTrack();
+            CopyTo(result);
+            return result;
+        }
     }
 }

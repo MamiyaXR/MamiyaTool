@@ -9,15 +9,17 @@ namespace MamiyaTool {
         public abstract void SetRoot(Transform root);
         public abstract void SetFrame(int frame, bool loop);
         public abstract void SetFrame(float time, bool loop);
+        public abstract FrameTrackBase Clone();
     }
 
     [Serializable]
-    public abstract class FrameTrackBase<TComponent, T> : FrameTrackBase where TComponent : Component where T : FrameDataBase {
+    public abstract class FrameTrackBase<TComponent, T> : FrameTrackBase where TComponent : UnityEngine.Object where T : FrameDataBase {
         [SerializeField] protected string componentPath;
+        [SerializeField] protected bool enable;
         [SerializeField] protected List<T> frames;
 
         protected Transform root;
-        protected TComponent Component {
+        protected virtual TComponent Component {
             get {
                 if(component == null) {
                     if(root != null) {
@@ -64,18 +66,21 @@ namespace MamiyaTool {
         protected float duration;
 
         protected int curFrameIndex;
-        protected bool Enable => Component != null && frames != null;
+        protected bool Enable => enable && Component != null && frames != null;
         /******************************************************************
          *
          *      public method
          *
          ******************************************************************/
         public FrameTrackBase() {
+            enable = true;
             frameCount = -1;
             duration = -1f;
+            curFrameIndex = -1;
         }
         public override void SetRoot(Transform root) {
             this.root = root;
+            component = null;
         }
         public override void SetFrame(int frame, bool loop) {
             if(!Enable)
@@ -121,5 +126,14 @@ namespace MamiyaTool {
          *
          ******************************************************************/
         protected abstract void Invoke();
+        protected void CopyTo(FrameTrackBase<TComponent, T> target) {
+            target.componentPath = componentPath;
+            target.enable = enable;
+            if(frames != null) {
+                target.frames = new List<T>();
+                foreach(var frame in frames)
+                    target.frames.Add(frame.Clone() as T);
+            }
+        }
     }
 }

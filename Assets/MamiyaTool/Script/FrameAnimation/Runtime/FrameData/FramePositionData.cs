@@ -13,5 +13,11 @@ namespace MamiyaTool {
         public FramePositionData() {
             localPosition = Vector3.zero;
         }
+        public override FrameDataBase Clone() {
+            FramePositionData result = new FramePositionData();
+            CopyTo(result);
+            result.localPosition = localPosition;
+            return result;
+        }
     }
 }

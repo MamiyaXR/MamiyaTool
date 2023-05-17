@@ -13,5 +13,11 @@ namespace MamiyaTool {
         public FrameRotationData() {
             localRotation = Quaternion.identity;
         }
+        public override FrameDataBase Clone() {
+            FrameRotationData result = new FrameRotationData();
+            CopyTo(result);
+            result.localRotation = localRotation;
+            return result;
+        }
     }
 }

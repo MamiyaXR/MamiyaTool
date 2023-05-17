@@ -1,7 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using static TMPro.SpriteAssetUtilities.TexturePacker_JsonArray;
 
 namespace MamiyaTool {
     [DisallowMultipleComponent]
@@ -10,8 +9,8 @@ namespace MamiyaTool {
         public string defaultAnim;
         public float PlaySpeed { get; set; }
 
-        public FrameAnimationAsset CurAnim => curAnim;
-        private FrameAnimationAsset curAnim;
+        public FrameAnimation CurAnim => curAnim;
+        private FrameAnimation curAnim;
 
         private float curFrame;
         private float curTimer;
@@ -86,7 +85,9 @@ namespace MamiyaTool {
         public void SetAnimation(FrameAnimationAsset asset) {
             if(asset == null)
                 return;
-            curAnim = asset;
+            if(curAnim != null && curAnim.Asset == asset)
+                return;
+            curAnim = new FrameAnimation(asset);
             curFrame = curAnim.Offset;
             SetRoot(transform);
             SetFrame(curFrame);
@@ -97,14 +98,11 @@ namespace MamiyaTool {
             isPlaying = true;
         }
         public void Play(string name) {
-            var anim = GetAnimation(name);
-            if(curAnim != anim)
-                SetAnimation(name);
+            SetAnimation(name);
             Play();
         }
         public void Play(FrameAnimationAsset asset) {
-            if(curAnim != asset)
-                SetAnimation(asset);
+            SetAnimation(asset);
             Play();
         }
         public void Pause() {

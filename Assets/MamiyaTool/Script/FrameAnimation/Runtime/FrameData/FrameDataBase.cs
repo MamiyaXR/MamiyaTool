@@ -10,5 +10,11 @@ namespace MamiyaTool {
         [SerializeField] protected float duration;
         public int FrameCount => frameCount;
         public float Duration => duration;
+
+        public abstract FrameDataBase Clone();
+        protected void CopyTo(FrameDataBase target) {
+            target.frameCount = frameCount;
+            target.duration = duration;
+        }
     }
 }

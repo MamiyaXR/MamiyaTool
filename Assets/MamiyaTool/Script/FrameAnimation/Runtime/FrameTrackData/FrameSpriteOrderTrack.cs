@@ -5,12 +5,12 @@ using UnityEngine;
 
 namespace MamiyaTool {
     [Serializable]
-    public class FrameSpriteTrack : FrameTrackBase<SpriteRenderer, FrameSpriteData> {
+    public class FrameSpriteOrderTrack : FrameTrackBase<SpriteRenderer, FrameSpriteOrderData> {
         protected override void Invoke() {
-            Component.sprite = frames[curFrameIndex].Frame;
+            Component.sortingOrder = frames[curFrameIndex].OrderInLayer;
         }
         public override FrameTrackBase Clone() {
-            FrameSpriteTrack result = new FrameSpriteTrack();
+            FrameSpriteOrderTrack result = new FrameSpriteOrderTrack();
             CopyTo(result);
             return result;
         }

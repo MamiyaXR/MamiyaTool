@@ -9,5 +9,10 @@ namespace MamiyaTool {
         protected override void Invoke() {
             Component.localRotation = frames[curFrameIndex].LocalRotation;
         }
+        public override FrameTrackBase Clone() {
+            FrameRotationTrack result = new FrameRotationTrack();
+            CopyTo(result);
+            return result;
+        }
     }
 }
