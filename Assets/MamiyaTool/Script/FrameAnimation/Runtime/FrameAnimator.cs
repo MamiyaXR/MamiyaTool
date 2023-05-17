@@ -1,17 +1,21 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using static TMPro.SpriteAssetUtilities.TexturePacker_JsonArray;
 
 namespace MamiyaTool {
     [DisallowMultipleComponent]
     public class FrameAnimator : MonoBehaviour {
         public List<FrameAnimationAsset> animations;
         public string defaultAnim;
+        public float PlaySpeed { get; set; }
 
         public FrameAnimationAsset CurAnim => curAnim;
         private FrameAnimationAsset curAnim;
 
-        private int curFrame;
+        private float curFrame;
+        private float curTimer;
+        public bool IsPlaying => isPlaying;
         private bool isPlaying;
         private bool CanPlay {
             get {
@@ -27,7 +31,9 @@ namespace MamiyaTool {
          *
          ******************************************************************/
         private void Awake() {
-            curFrame = 0;
+            curFrame = 0f;
+            curTimer = 0f;
+            PlaySpeed = 1f;
             isPlaying = false;
 
             if(animations == null)
@@ -41,7 +47,13 @@ namespace MamiyaTool {
                 return;
             if(!isPlaying)
                 return;
-            SetFrame(++curFrame);
+
+            curTimer += Time.deltaTime * PlaySpeed;
+            curFrame += PlaySpeed;
+            if(curAnim.UseTime) {
+                SetFrame(curTimer);
+            } else
+                SetFrame(Mathf.FloorToInt(curFrame));
         }
         /******************************************************************
          *
@@ -52,7 +64,13 @@ namespace MamiyaTool {
             if(curAnim.Tracks == null)
                 return;
             for(int i = 0; i < curAnim.Tracks.Count; ++i)
-                SetTrackFrame(curAnim.Tracks[i], frame, curAnim.Loop);
+                curAnim.Tracks[i].SetFrame(frame, curAnim.Loop);
+        }
+        public void SetFrame(float time) {
+            if(curAnim.Tracks == null)
+                return;
+            for(int i = 0; i < curAnim.Tracks.Count; ++i)
+                curAnim.Tracks[i].SetFrame(time, curAnim.Loop);
         }
         public FrameAnimationAsset GetAnimation(string name) {
             foreach(var anim in animations) {
@@ -70,6 +88,7 @@ namespace MamiyaTool {
                 return;
             curAnim = asset;
             curFrame = curAnim.Offset;
+            SetRoot(transform);
             SetFrame(curFrame);
         }
         public void Play() {
@@ -104,24 +123,11 @@ namespace MamiyaTool {
          *      private method
          *
          ******************************************************************/
-        private void SetTrackFrame(FrameTrack track, int frame, bool loop = false) {
-            if(track.Frames == null)
+        private void SetRoot(Transform root) {
+            if(curAnim.Tracks == null)
                 return;
-            Transform renderTrans = string.IsNullOrEmpty(track.RenderPath) ?
-                                    transform : transform.Find(track.RenderPath);
-            if(renderTrans == null)
-                return;
-            SpriteRenderer render = renderTrans.GetComponent<SpriteRenderer>();
-            if(render == null)
-                return;
-
-            FrameData frameData = new FrameData();
-            if(track.TryGetFrameData(frame, ref frameData, curAnim.Loop)) {
-                renderTrans.localPosition = frameData.LocalPosition;
-                renderTrans.localRotation = Quaternion.Euler(frameData.LocalRotation);
-                renderTrans.localScale = frameData.LocalScale;
-                render.sprite = frameData.Sprite;
-            }
+            for(int i = 0; i < curAnim.Tracks.Count; ++i)
+                curAnim.Tracks[i].SetRoot(root);
         }
     }
 }
