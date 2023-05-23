@@ -1,41 +1,52 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using UnityEditor;
+using UnityEditor.SceneManagement;
 using UnityEngine;
 
-public class SceneAreaMark : MonoBehaviour {
-    public Color color = Color.green;
-    private List<SceneConfig> loadedScenes = new List<SceneConfig>();
-    /*****************************************************************
-     * 
-     *      lifecycle
-     * 
-     *****************************************************************/
-    private void OnDrawGizmos() {
-        Gizmos.color = color;
-        foreach(SceneConfig cfg in loadedScenes)
-            DrawOneScene(cfg);
-    }
-    /*****************************************************************
-     * 
-     *      public method
-     * 
-     *****************************************************************/
-    public void Add(SceneConfig cfg) {
-        loadedScenes.Add(cfg);
-    }
-    public void Remove(SceneConfig cfg) {
-        loadedScenes.Remove(cfg);
-    }
-    /*****************************************************************
-     * 
-     *      private method
-     * 
-     *****************************************************************/
-    private void DrawOneScene(SceneConfig cfg) {
-        if(cfg == null)
-            return;
-        Vector3 center = new Vector3(cfg.Area.center.x, cfg.Area.center.y, 0f);
-        Vector3 size = new Vector3(cfg.Area.size.x, cfg.Area.size.y, 0f);
-        Gizmos.DrawWireCube(center, size);
+namespace MamiyaTool {
+    public class SceneAreaMark : MonoBehaviour {
+        public Color color = Color.green;
+        /*****************************************************************
+         * 
+         *      lifecycle
+         * 
+         *****************************************************************/
+        private void OnDrawGizmos() {
+            Gizmos.color = color;
+            string[] sceneMarkGUIDs = AssetDatabase.FindAssets("t:SceneConfig");
+            foreach(var guid in sceneMarkGUIDs) {
+                SceneConfig cfg = LoadAsset<SceneConfig>(guid);
+                if(IsSceneLoaded(cfg.Scene))
+                    DrawOneScene(cfg);
+            }
+        }
+        /*****************************************************************
+         * 
+         *      private method
+         * 
+         *****************************************************************/
+        private void DrawOneScene(SceneConfig cfg) {
+            if(cfg == null)
+                return;
+            Gizmos.DrawWireCube(cfg.Area.center, cfg.Area.size);
+        }
+        private T LoadAsset<T>(string guid) where T : Object {
+            string path = AssetDatabase.GUIDToAssetPath(guid);
+            return AssetDatabase.LoadAssetAtPath<T>(path);
+        }
+        private bool IsSceneLoaded(SceneAsset scene) {
+            bool result = false;
+            if(scene != null) {
+                for(int cnt = 0; cnt < EditorSceneManager.sceneCount; cnt++) {
+                    var s = EditorSceneManager.GetSceneAt(cnt);
+                    if(scene.Asset != null && s.name == scene.Asset.name) {
+                        result = true;
+                        break;
+                    }
+                }
+            }
+            return result;
+        }
     }
 }
