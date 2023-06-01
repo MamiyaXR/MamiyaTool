@@ -22,6 +22,7 @@ namespace MamiyaTool
                 }
                 if(methodInfo != null) {
                     methodInfo.Invoke(property.serializedObject.targetObject, null);
+                    EditorUtility.SetDirty(property.serializedObject.targetObject);
                 } else {
                     Debug.LogError($"Not found method '{tempAttribute.methodName}' in class {type.Name}.");
                 }
