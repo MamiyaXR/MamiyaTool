@@ -15,4 +15,9 @@ namespace MamiyaTool {
     //        return result;
     //    }
     //}
+    public class FrameSpriteTrack : FrameTrackBase<FrameSpriteData> {
+        public override IFramePlayer CreatePlayer(Transform root) {
+            return FramePlayerBase.Create<FrameSpritePlayer>(root, componentPath, datas);
+        }
+    }
 }

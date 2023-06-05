@@ -16,4 +16,9 @@ namespace MamiyaTool {
     //        return result;
     //    }
     //}
+    public class FrameSpriteData : FrameDataBase {
+        [SerializeField] private Sprite frame;
+
+        public Sprite Frame => frame;
+    }
 }
