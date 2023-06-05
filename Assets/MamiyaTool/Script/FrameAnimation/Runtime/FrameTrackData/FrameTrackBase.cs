@@ -9,6 +9,7 @@ namespace MamiyaTool {
         public abstract void SetRoot(Transform root);
         public abstract void SetFrame(int frame, bool loop);
         public abstract void SetFrame(float time, bool loop);
+        public abstract void Reset();
         public abstract FrameTrackBase Clone();
     }
 
@@ -120,6 +121,7 @@ namespace MamiyaTool {
                 }
             }
         }
+        public override void Reset() { }
         /******************************************************************
          *
          *      

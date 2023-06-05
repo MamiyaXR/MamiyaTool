@@ -5,12 +5,13 @@ using UnityEngine;
 
 namespace MamiyaTool {
     //[Serializable]
-    //public class FramePositionTrack : FrameTrackBase<Transform, FramePositionData> {
+    //public class FrameSpriteFlipTrack : FrameTrackBase<SpriteRenderer, FrameSpriteFlipData> {
     //    protected override void Invoke() {
-    //        Component.localPosition = frames[curFrameIndex].LocalPosition;
+    //        Component.flipX = frames[curFrameIndex].FilpX;
+    //        Component.flipY = frames[curFrameIndex].FilpY;
     //    }
     //    public override FrameTrackBase Clone() {
-    //        FramePositionTrack result = new FramePositionTrack();
+    //        FrameSpriteFlipTrack result = new FrameSpriteFlipTrack();
     //        CopyTo(result);
     //        return result;
     //    }
