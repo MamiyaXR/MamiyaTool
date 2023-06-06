@@ -1,18 +1,13 @@
-﻿using System;
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 namespace MamiyaTool {
-    //[Serializable]
-    //public class FrameRotationTrack : FrameTrackBase<Transform, FrameRotationData> {
-    //    protected override void Invoke() {
-    //        Component.localRotation = frames[curFrameIndex].LocalRotation;
-    //    }
-    //    public override FrameTrackBase Clone() {
-    //        FrameRotationTrack result = new FrameRotationTrack();
-    //        CopyTo(result);
-    //        return result;
-    //    }
-    //}
+    public class FrameRotationTrack : FrameTrackBase<FrameRotationData> {
+        public override IFramePlayer CreatePlayer(Transform root) {
+            FrameRotationPlayer result = new FrameRotationPlayer();
+            result.Init(root, this);
+            return result;
+        }
+    }
 }

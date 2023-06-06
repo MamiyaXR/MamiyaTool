@@ -1,42 +1,109 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
+using UnityEngine;
+using UnityEngine.Events;
 
 namespace MamiyaTool {
     public class FrameAnimation : IDisposable {
-        //private List<FrameTrackBase> tracks;
-        //private int offset = 0;
-        //private bool loop = false;
-        //private bool playOnAwake = true;
-        //private bool useTime = false;
+        private FrameAnimationAsset asset;
 
-        //public List<FrameTrackBase> Tracks => tracks;
-        //public int Offset => offset;
-        //public bool Loop => loop;
-        //public bool PlayOnAwake => playOnAwake;
-        //public bool UseTime => useTime;
-        //public FrameAnimationAsset Asset { get; private set; }
+        private List<IFramePlayer> players;
+        private int sampleRate = 24;
+        private bool loop = false;
+        private bool playOnAwake;
 
-        //public FrameAnimation(FrameAnimationAsset asset) {
-        //    if(asset.Tracks != null) {
-        //        tracks = new List<FrameTrackBase>();
-        //        foreach(var track in asset.Tracks)
-        //            tracks.Add(track.Clone());
-        //    }
-        //    offset = asset.Offset;
-        //    loop = asset.Loop;
-        //    playOnAwake = asset.PlayOnAwake;
-        //    useTime = asset.UseTime;
-        //    Asset = asset;
-        //}
-        //public void Reset() {
-        //    if(tracks != null) {
-        //        foreach(var track in tracks)
-        //            track.Reset();
-        //    }
-        //}
+        private float frameLength;
+        private int beginFrame;
+        private int endFrame;
+        private int frameCount;
+        private float length;
+
+        private bool usable;
+        private float frameTimer;
+        private int curFrame;
+
+        private UnityEvent onComplete;
+
+        public FrameAnimationAsset Asset => asset;
+        public bool PlayOnAwake => playOnAwake;
+        /******************************************************************
+         *
+         *      public method
+         *
+         ******************************************************************/
+        public FrameAnimation(Transform root, FrameAnimationAsset asset) {
+            this.asset = asset;
+
+            players = new List<IFramePlayer>();
+            if(asset.Tracks != null) {
+                foreach(var track in asset.Tracks)
+                    players.Add(track.CreatePlayer(root));
+            }
+            sampleRate = asset.SampleRate;
+            loop = asset.Loop;
+            playOnAwake = asset.PlayOnAwake;
+
+            frameLength = sampleRate <= 0 ? 0f : 1f / sampleRate;
+            //beginFrame = players.Select(i => i.BeginFrame).Min();
+            beginFrame = 0;
+            endFrame = players.Select(i => i.EndFrame).Max();
+            frameCount = endFrame - beginFrame;
+            length = frameCount * frameLength;
+
+            usable = length > 0f;
+
+            onComplete = new UnityEvent();
+        }
+        public void Play(UnityAction complete = null) {
+            frameTimer = 0f;
+            curFrame = beginFrame;
+            SetFrame(curFrame);
+            onComplete.AddListener(complete);
+        }
+        public void Update(float time) {
+            if(!usable)
+                return;
+
+            frameTimer += time;
+            if(frameTimer >= frameLength) {
+                int step = (int)(frameTimer / frameLength);
+                frameTimer = frameTimer % frameLength;
+                curFrame += step;
+                if(curFrame > endFrame) {
+                    if(loop) {
+                        curFrame = beginFrame;
+                    } else {
+                        Stop();
+                        return;
+                    }
+                }
+                SetFrame(curFrame);
+            }
+        }
+        public void Stop() {
+            Reset();
+            onComplete.Invoke();
+            onComplete.RemoveAllListeners();
+        }
+        public void Reset() {
+            foreach(var player in players)
+                player.Reset();
+        }
         public void Dispose() {
             GC.SuppressFinalize(this);
+        }
+        /******************************************************************
+         *
+         *      private method
+         *
+         ******************************************************************/
+        private void SetFrame(int frameIndex) {
+            foreach(var player in players) {
+                if(player.Enable)
+                    player.SetFrame(frameIndex);
+            }
         }
     }
 }

@@ -4,17 +4,10 @@ using System.Collections.Generic;
 using UnityEngine;
 
 namespace MamiyaTool {
-    //[Serializable]
-    //public class FrameVisibleData : FrameDataBase {
-    //    [SerializeField] private bool visible;
+    [Serializable]
+    public class FrameVisibleData : FrameDataBase {
+        [SerializeField] private bool visible = true;
 
-    //    public bool Visible => visible;
-
-    //    public override FrameDataBase Clone() {
-    //        FrameVisibleData result = new FrameVisibleData();
-    //        CopyTo(result);
-    //        result.visible = visible;
-    //        return result;
-    //    }
-    //}
+        public bool Visible => visible;
+    }
 }

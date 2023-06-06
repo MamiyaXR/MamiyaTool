@@ -1,0 +1,44 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f89d291d51a48744da3cd2ba8e9f306f, type: 3}
+  m_Name: Up
+  m_EditorClassIdentifier: 
+  tracks:
+  - rid: 6213682297219842052
+  sampleRate: 24
+  loop: 1
+  playOnAwake: 1
+  references:
+    version: 2
+    RefIds:
+    - rid: 6213682297219842052
+      type: {class: FrameSpriteTrack, ns: MamiyaTool, asm: Assembly-CSharp}
+      data:
+        enable: 1
+        componentPath: 
+        frames:
+        - frameIndex: 0
+          frame: {fileID: 1784721673, guid: 9e65225f3c761184db0753c9b1b721f3, type: 3}
+        - frameIndex: 1
+          frame: {fileID: 2079655651, guid: 9e65225f3c761184db0753c9b1b721f3, type: 3}
+        - frameIndex: 2
+          frame: {fileID: 1600866900, guid: 9e65225f3c761184db0753c9b1b721f3, type: 3}
+        - frameIndex: 3
+          frame: {fileID: 44055303, guid: 9e65225f3c761184db0753c9b1b721f3, type: 3}
+        - frameIndex: 4
+          frame: {fileID: -651948815, guid: 9e65225f3c761184db0753c9b1b721f3, type: 3}
+        - frameIndex: 5
+          frame: {fileID: -1710212254, guid: 9e65225f3c761184db0753c9b1b721f3, type: 3}
+        - frameIndex: 6
+          frame: {fileID: 1024911466, guid: 9e65225f3c761184db0753c9b1b721f3, type: 3}
+        - frameIndex: 7
+          frame: {fileID: 870421623, guid: 9e65225f3c761184db0753c9b1b721f3, type: 3}

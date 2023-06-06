@@ -1,30 +1,56 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 namespace MamiyaTool {
     public abstract class FramePlayerBase<TObject, TData> : IFramePlayer where TObject : Object where TData : FrameDataBase {
+        protected bool enable;
+        protected int beginFrame;
+        protected int endFrame;
         protected TObject m_Object;
         protected List<TData> datas;
+
+        public bool Enable => enable;
+        public int BeginFrame => beginFrame;
+        public int EndFrame => endFrame;
+
+        private int curFrame;
         /******************************************************************
          *
          *      public method
          *
          ******************************************************************/
         public void SetFrame(int frameCount) {
+            frameCount = Mathf.Clamp(frameCount, beginFrame, endFrame);
+            if(curFrame == frameCount)
+                return;
+            curFrame = frameCount;
             foreach(var data in datas) {
-                if(data.FrameIndex == frameCount) {
+                if(data.FrameIndex == curFrame) {
                     Invoke(data);
                     return;
                 }
             }
         }
+        public void Init(Transform root, IFrameTrack<TData> track) {
+            enable = track.Enable;
+            m_Object = GetObjectInner(root, track.ComponentPath);
+            datas = new List<TData>();
+            datas.AddRange(track.Datas);
+
+            beginFrame = datas.Count > 0 ? datas.Select(i => i.FrameIndex).Min() : 0;
+            endFrame = datas.Count > 0 ? datas.Select(i => i.FrameIndex).Max() : 0;
+
+            curFrame = -1;
+        }
+        public abstract void Reset();
         /******************************************************************
          *
          *      protected method
          *
          ******************************************************************/
-        protected virtual TObject GetObject(Transform root, string path) {
+        protected virtual TObject GetObjectInner(Transform root, string path) {
             if(root == null)
                 return null;
             if(string.IsNullOrEmpty(path))
@@ -35,17 +61,5 @@ namespace MamiyaTool {
             return trans.GetComponent<TObject>();
         }
         protected abstract void Invoke(TData data);
-        /******************************************************************
-         *
-         *      static method
-         *
-         ******************************************************************/
-        public static T Create<T>(Transform root, string path, List<TData> datas) where T : FramePlayerBase<TObject, TData>, new() {
-            T result = new T();
-            result.m_Object = result.GetObject(root, path);
-            result.datas = new List<TData>();
-            result.datas.AddRange(datas);
-            return result;
-        }
     }
 }

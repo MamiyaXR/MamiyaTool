@@ -1,18 +1,13 @@
-﻿using System;
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 namespace MamiyaTool {
-    //[Serializable]
-    //public class FrameScaleTrack : FrameTrackBase<Transform, FrameScaleData> {
-    //    protected override void Invoke() {
-    //        Component.localScale = frames[curFrameIndex].LocalScale;
-    //    }
-    //    public override FrameTrackBase Clone() {
-    //        FrameScaleTrack result = new FrameScaleTrack();
-    //        CopyTo(result);
-    //        return result;
-    //    }
-    //}
+    public class FrameScaleTrack : FrameTrackBase<FrameScaleData> {
+        public override IFramePlayer CreatePlayer(Transform root) {
+            FrameScalePlayer result = new FrameScalePlayer();
+            result.Init(root, this);
+            return result;
+        }
+    }
 }

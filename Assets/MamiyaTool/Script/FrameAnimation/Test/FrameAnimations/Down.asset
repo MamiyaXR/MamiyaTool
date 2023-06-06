@@ -1,0 +1,44 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f89d291d51a48744da3cd2ba8e9f306f, type: 3}
+  m_Name: Down
+  m_EditorClassIdentifier: 
+  tracks:
+  - rid: 6213682297219842056
+  sampleRate: 24
+  loop: 1
+  playOnAwake: 1
+  references:
+    version: 2
+    RefIds:
+    - rid: 6213682297219842056
+      type: {class: FrameSpriteTrack, ns: MamiyaTool, asm: Assembly-CSharp}
+      data:
+        enable: 1
+        componentPath: 
+        frames:
+        - frameIndex: 0
+          frame: {fileID: 1072866733, guid: 9e65225f3c761184db0753c9b1b721f3, type: 3}
+        - frameIndex: 1
+          frame: {fileID: 1556545794, guid: 9e65225f3c761184db0753c9b1b721f3, type: 3}
+        - frameIndex: 2
+          frame: {fileID: 1247883151, guid: 9e65225f3c761184db0753c9b1b721f3, type: 3}
+        - frameIndex: 3
+          frame: {fileID: -1506517530, guid: 9e65225f3c761184db0753c9b1b721f3, type: 3}
+        - frameIndex: 4
+          frame: {fileID: -1682975244, guid: 9e65225f3c761184db0753c9b1b721f3, type: 3}
+        - frameIndex: 5
+          frame: {fileID: 762117852, guid: 9e65225f3c761184db0753c9b1b721f3, type: 3}
+        - frameIndex: 6
+          frame: {fileID: 1968918381, guid: 9e65225f3c761184db0753c9b1b721f3, type: 3}
+        - frameIndex: 7
+          frame: {fileID: -54362210, guid: 9e65225f3c761184db0753c9b1b721f3, type: 3}
