@@ -172,7 +172,7 @@ namespace MamiyaTool {
             scrollPos = GUI.BeginScrollView(rect, scrollPos, new Rect(0, 0, position.width - 20, sceneCfgs.Count * 20));
 
             Scene activeScene = EditorSceneManager.GetActiveScene();
-            DrawLaunchScene(activeScene.name == launchScene.Asset.name);
+            DrawLaunchScene(activeScene);
             for(int i = 0; i < list.Count; i++) {
                 SceneConfig mark = sceneCfgs[i];
                 if(mark == null)
@@ -189,9 +189,11 @@ namespace MamiyaTool {
         /// <summary>
         /// 绘制Launch场景
         /// </summary>
-        private void DrawLaunchScene(bool active = false) {
+        private void DrawLaunchScene(Scene activeScene) {
             if(launchScene == null)
                 return;
+
+            bool active = activeScene.name == launchScene.Asset.name;
             
             Rect r = EditorGUILayout.BeginHorizontal(GetElementStyle(active));
             GUILayout.Space(5);
