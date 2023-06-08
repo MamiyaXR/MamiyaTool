@@ -1,12 +1,17 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using UnityEngine;
+
+#if UNITY_EDITOR
 using UnityEditor;
 using UnityEditor.SceneManagement;
-using UnityEngine;
+#endif
 
 namespace MamiyaTool {
     public class SceneAreaMark : MonoBehaviour {
         public Color color = Color.green;
+
+#if UNITY_EDITOR
         /*****************************************************************
          * 
          *      lifecycle
@@ -14,6 +19,7 @@ namespace MamiyaTool {
          *****************************************************************/
         private void OnDrawGizmos() {
             Gizmos.color = color;
+            GUI.color = color;
             string[] sceneMarkGUIDs = AssetDatabase.FindAssets("t:SceneConfig");
             foreach(var guid in sceneMarkGUIDs) {
                 SceneConfig cfg = LoadAsset<SceneConfig>(guid);
@@ -29,6 +35,7 @@ namespace MamiyaTool {
         private void DrawOneScene(SceneConfig cfg) {
             if(cfg == null)
                 return;
+            Handles.Label(cfg.Area.center, cfg.name);
             Gizmos.DrawWireCube(cfg.Area.center, cfg.Area.size);
         }
         private T LoadAsset<T>(string guid) where T : Object {
@@ -48,5 +55,6 @@ namespace MamiyaTool {
             }
             return result;
         }
+#endif
     }
 }

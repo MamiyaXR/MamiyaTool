@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
 using UnityEditor.SceneManagement;
-using Unity.VisualScripting;
+using UnityEngine.SceneManagement;
 
 namespace MamiyaTool {
     public class SceneCfgMgrWindow : EditorWindow {
@@ -171,58 +171,73 @@ namespace MamiyaTool {
         private void DrawList(Rect rect, List<SceneConfig> list) {
             scrollPos = GUI.BeginScrollView(rect, scrollPos, new Rect(0, 0, position.width - 20, sceneCfgs.Count * 20));
 
-            DrawLaunchScene();
+            Scene activeScene = EditorSceneManager.GetActiveScene();
+            DrawLaunchScene(activeScene.name == launchScene.Asset.name);
             for(int i = 0; i < list.Count; i++) {
                 SceneConfig mark = sceneCfgs[i];
                 if(mark == null)
                     continue;
                 if(!mark.name.ToLower().Contains(searchField.ToLower()))
                     continue;
-                DrawElement(mark);
+                DrawElement(mark, activeScene.name == mark.Scene.Asset.name);
             }
             GUI.EndScrollView();
+        }
+        private GUIStyle GetElementStyle(bool active) {
+            return active ? new GUIStyle("ObjectPickerBackground") : GUIStyle.none;
         }
         /// <summary>
         /// 绘制Launch场景
         /// </summary>
-        private void DrawLaunchScene() {
+        private void DrawLaunchScene(bool active = false) {
             if(launchScene == null)
                 return;
-
-            EditorGUILayout.BeginHorizontal();
+            
+            Rect r = EditorGUILayout.BeginHorizontal(GetElementStyle(active));
             GUILayout.Space(5);
-            GUILayout.Label(launchScene.name);
+            // name
+            GUILayout.Label(launchScene.Asset.name);
             GUILayout.FlexibleSpace();
             // search
             if(GUILayout.Button(new GUIContent("", "Find SceneConfig object"), skin.FindStyle("Search"), GUILayout.Width(20), GUILayout.Height(20)))
                 EditorGUIUtility.PingObject(launchScene.Asset);
             LoadSceneControl(launchScene);
             EditorGUILayout.EndHorizontal();
+            // list item button
+            if(GUI.Button(r, "", GUIStyle.none)) {
+                Scene scene = new Scene();
+                if(IsSceneLoaded(launchScene, ref scene))
+                    EditorSceneManager.SetActiveScene(scene);
+            }
         }
         /// <summary>
         /// 绘制列表元素
         /// </summary>
         /// <param name="mark">数据</param>
-        private void DrawElement(SceneConfig mark) {
-            EditorGUILayout.BeginHorizontal();
-
+        private void DrawElement(SceneConfig mark, bool active = false) {
+            Rect r = EditorGUILayout.BeginHorizontal(GetElementStyle(active));
             GUILayout.Space(5);
             BuildSettingsControl(mark.Scene);
-            //GUILayout.Label(mark.Name);
-            if(GUILayout.Button(new GUIContent(mark.name), GUI.skin.label)) {
-                SceneView.lastActiveSceneView.Frame(mark.Area);
-            }
+            GUILayout.Label(mark.name);
             //GUILayout.Space(5);
             //GUILayout.Label($"{mark.Area}");
             GUILayout.FlexibleSpace();
             // search
             if(GUILayout.Button(new GUIContent("", "Find SceneConfig object"), skin.FindStyle("Search"), GUILayout.Width(20), GUILayout.Height(20))) {
                 EditorGUIUtility.PingObject(mark);
+                Selection.activeObject = mark;
             }
             LoadSceneControl(mark.Scene);
             LoadAddSceneControl(mark);
 
             EditorGUILayout.EndHorizontal();
+            // list item button
+            if(GUI.Button(r, "", GUIStyle.none)) {
+                SceneView.lastActiveSceneView.Frame(mark.Area);
+                Scene scene = new Scene();
+                if(IsSceneLoaded(mark.Scene, ref scene))
+                    EditorSceneManager.SetActiveScene(scene);
+            }
         }
         /// <summary>
         /// 检测并绘制buildsetting按钮
@@ -280,6 +295,19 @@ namespace MamiyaTool {
                 for(int cnt = 0; cnt < EditorSceneManager.sceneCount; cnt++) {
                     var s = EditorSceneManager.GetSceneAt(cnt);
                     if(scene.Asset != null && s.name == scene.Asset.name) {
+                        result = true;
+                        break;
+                    }
+                }
+            }
+            return result;
+        }
+        private bool IsSceneLoaded(SceneAsset asset, ref Scene scene) {
+            bool result = false;
+            if(asset != null) {
+                for(int cnt = 0; cnt < EditorSceneManager.sceneCount; cnt++) {
+                    scene = EditorSceneManager.GetSceneAt(cnt);
+                    if(asset.Asset != null && scene.name == asset.Asset.name) {
                         result = true;
                         break;
                     }
@@ -358,7 +386,7 @@ namespace MamiyaTool {
          *****************************************************************/
         private enum Tab {
             SceneList,
-            Tester
+            Tester,
         }
         private enum ErrorMessage {
             NoProblem,
