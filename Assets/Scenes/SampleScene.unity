@@ -1213,6 +1213,8 @@ GameObject:
   - component: {fileID: 1960343534}
   - component: {fileID: 1960343535}
   - component: {fileID: 1960343536}
+  - component: {fileID: 1960343538}
+  - component: {fileID: 1960343540}
   m_Layer: 0
   m_Name: Left
   m_TagString: Untagged
@@ -1312,6 +1314,48 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 6831c2f6e4cf8bb4cb1fb57f7fa36e28, type: 2}
   defaultAnim: Left
   playSpeed: 1
+--- !u!114 &1960343538
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1960343533}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d8c4bff5aa0bce44eb6e6fe916e51805, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &1960343540
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1960343533}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6a417456acc0f8845ad9d029cc7e96c4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  events:
+    eventNames:
+    - Log
+    events:
+    - m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 1960343538}
+          m_TargetAssemblyTypeName: EventTest, Assembly-CSharp
+          m_MethodName: OnEvent
+          m_Mode: 5
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: WHAT THE FUCK
+            m_BoolArgument: 0
+          m_CallState: 2
 --- !u!1 &2014766994
 GameObject:
   m_ObjectHideFlags: 0

@@ -16,7 +16,8 @@ MonoBehaviour:
   - rid: 6213682297219842050
   - rid: 6213682297219842058
   - rid: 6213682297219842059
-  sampleRate: 24
+  - rid: 6213682322044878848
+  sampleRate: 8
   loop: 1
   playOnAwake: 1
   references:
@@ -64,3 +65,11 @@ MonoBehaviour:
           frame: {fileID: -38760568, guid: c215194f279e8b041a64c4055c3bffc7, type: 3}
         - frameIndex: 8
           frame: {fileID: -38760568, guid: c215194f279e8b041a64c4055c3bffc7, type: 3}
+    - rid: 6213682322044878848
+      type: {class: FrameEventTrack, ns: MamiyaTool, asm: Assembly-CSharp}
+      data:
+        enable: 1
+        componentPath: 
+        frames:
+        - frameIndex: 4
+          eventKey: Log

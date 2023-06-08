@@ -10,15 +10,13 @@ namespace MamiyaTool {
          *      override
          *
          ******************************************************************/
-        protected override Transform GetObjectInner(Transform root, string path) {
-            var result = base.GetObjectInner(root, path);
-            cache = result.localScale;
-            return result;
+        protected override void Cache() {
+            cache = m_Object.localScale;
         }
         protected override void Invoke(FrameScaleData data) {
             m_Object.localScale = data.LocalScale;
         }
-        public override void Reset() {
+        protected override void ResetInner() {
             m_Object.localScale = cache;
         }
     }

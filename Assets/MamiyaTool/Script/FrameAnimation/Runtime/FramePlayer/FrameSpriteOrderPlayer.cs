@@ -10,15 +10,13 @@ namespace MamiyaTool {
          *      override
          *
          ******************************************************************/
-        protected override SpriteRenderer GetObjectInner(Transform root, string path) {
-            var result = base.GetObjectInner(root, path);
-            cache = result.sortingOrder;
-            return result;
+        protected override void Cache() {
+            cache = m_Object.sortingOrder;
         }
         protected override void Invoke(FrameSpriteOrderData data) {
             m_Object.sortingOrder = cache + data.OrderInLayer;
         }
-        public override void Reset() {
+        protected override void ResetInner() {
             m_Object.sortingOrder = cache;
         }
     }

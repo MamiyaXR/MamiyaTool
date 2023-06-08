@@ -10,15 +10,13 @@ namespace MamiyaTool {
          *      override
          *
          ******************************************************************/
-        protected override SpriteRenderer GetObjectInner(Transform root, string path) {
-            var result = base.GetObjectInner(root, path);
-            cache = result.flipX;
-            return result;
+        protected override void Cache() {
+            cache = m_Object.flipX;
         }
         protected override void Invoke(FrameSpriteFlipXData data) {
             m_Object.flipX = data.FilpX;
         }
-        public override void Reset() {
+        protected override void ResetInner() {
             m_Object.flipX = cache;
         }
     }

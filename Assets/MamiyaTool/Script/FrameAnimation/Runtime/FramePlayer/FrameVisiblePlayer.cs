@@ -13,20 +13,20 @@ namespace MamiyaTool {
         protected override GameObject GetObjectInner(Transform root, string path) {
             if(root == null)
                 return null;
-            if(string.IsNullOrEmpty(path)) {
-                cache = root.gameObject.activeInHierarchy;
+            if(string.IsNullOrEmpty(path))
                 return root.gameObject;
-            }
             Transform trans = root.Find(path);
             if(trans == null)
                 return null;
-            cache = trans.gameObject.activeInHierarchy;
             return trans.gameObject;
+        }
+        protected override void Cache() {
+            cache = m_Object.activeInHierarchy;
         }
         protected override void Invoke(FrameVisibleData data) {
             m_Object.SetActive(data.Visible);
         }
-        public override void Reset() {
+        protected override void ResetInner() {
             m_Object.SetActive(cache);
         }
     }

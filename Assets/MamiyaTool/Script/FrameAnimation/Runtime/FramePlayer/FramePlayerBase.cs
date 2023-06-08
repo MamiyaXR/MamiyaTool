@@ -15,27 +15,29 @@ namespace MamiyaTool {
         public int BeginFrame => beginFrame;
         public int EndFrame => endFrame;
 
-        private int curFrame;
+        protected int curFrame;
+        protected bool ObjUsable => m_Object != null;
         /******************************************************************
          *
          *      public method
          *
          ******************************************************************/
-        public void SetFrame(int frameCount) {
+        public virtual void SetFrame(int frameCount) {
             frameCount = Mathf.Clamp(frameCount, beginFrame, endFrame);
             if(curFrame == frameCount)
                 return;
             curFrame = frameCount;
             foreach(var data in datas) {
                 if(data.FrameIndex == curFrame) {
-                    Invoke(data);
+                    if(ObjUsable)
+                        Invoke(data);
                     return;
                 }
             }
         }
         public void Init(Transform root, IFrameTrack<TData> track) {
             enable = track.Enable;
-            m_Object = GetObjectInner(root, track.ComponentPath);
+            GetObject(root, track.ComponentPath);
             datas = new List<TData>();
             datas.AddRange(track.Datas);
 
@@ -44,12 +46,20 @@ namespace MamiyaTool {
 
             curFrame = -1;
         }
-        public abstract void Reset();
+        public virtual void Reset() {
+            if(ObjUsable)
+                ResetInner();
+        }
         /******************************************************************
          *
          *      protected method
          *
          ******************************************************************/
+        protected virtual void GetObject(Transform root, string path) {
+            m_Object = GetObjectInner(root, path);
+            if(ObjUsable)
+                Cache();
+        }
         protected virtual TObject GetObjectInner(Transform root, string path) {
             if(root == null)
                 return null;
@@ -60,6 +70,8 @@ namespace MamiyaTool {
                 return null;
             return trans.GetComponent<TObject>();
         }
+        protected virtual void Cache() { }
+        protected virtual void ResetInner() { }
         protected abstract void Invoke(TData data);
     }
 }
