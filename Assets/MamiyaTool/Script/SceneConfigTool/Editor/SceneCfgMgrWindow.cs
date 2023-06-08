@@ -179,7 +179,7 @@ namespace MamiyaTool {
                     continue;
                 if(!mark.name.ToLower().Contains(searchField.ToLower()))
                     continue;
-                DrawElement(mark, activeScene.name == mark.Scene.Asset.name);
+                DrawElement(mark, activeScene);
             }
             GUI.EndScrollView();
         }
@@ -216,7 +216,12 @@ namespace MamiyaTool {
         /// 绘制列表元素
         /// </summary>
         /// <param name="mark">数据</param>
-        private void DrawElement(SceneConfig mark, bool active = false) {
+        private void DrawElement(SceneConfig mark, Scene activeScene) {
+            if(mark == null || mark.Scene.Asset == null)
+                return;
+
+            bool active = activeScene.name == mark.Scene.Asset.name;
+
             Rect r = EditorGUILayout.BeginHorizontal(GetElementStyle(active));
             GUILayout.Space(5);
             BuildSettingsControl(mark.Scene);
