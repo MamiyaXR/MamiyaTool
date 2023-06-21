@@ -13,15 +13,15 @@ MonoBehaviour:
   m_Name: KolaRun
   m_EditorClassIdentifier: 
   tracks:
-  - rid: 6213682297219842049
+  - rid: 6213682498241298463
   sampleRate: 24
   loop: 1
   playOnAwake: 1
   references:
     version: 2
     RefIds:
-    - rid: 6213682297219842049
-      type: {class: FrameSpriteTrack, ns: MamiyaTool, asm: Assembly-CSharp}
+    - rid: 6213682498241298463
+      type: {class: FrameScaleTrack, ns: MamiyaTool, asm: Assembly-CSharp}
       data:
         enable: 1
         componentPath: 

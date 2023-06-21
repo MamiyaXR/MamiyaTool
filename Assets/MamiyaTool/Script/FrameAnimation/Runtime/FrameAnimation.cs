@@ -28,12 +28,14 @@ namespace MamiyaTool {
 
         public FrameAnimationAsset Asset => asset;
         public bool PlayOnAwake => playOnAwake;
+        public float startTime => beginFrame;
+        public float stopTime => endFrame;
         /******************************************************************
          *
          *      public method
          *
          ******************************************************************/
-        public FrameAnimation(Transform root, FrameAnimationAsset asset) {
+        public FrameAnimation(Transform root, FrameAnimationAsset asset, bool isEdit = false) {
             this.asset = asset;
 
             players = new List<IFramePlayer>();
@@ -46,8 +48,7 @@ namespace MamiyaTool {
             playOnAwake = asset.PlayOnAwake;
 
             frameLength = sampleRate <= 0 ? 0f : 1f / sampleRate;
-            //beginFrame = players.Select(i => i.BeginFrame).Min();
-            beginFrame = 0;
+            beginFrame = isEdit ? players.Select(i => i.BeginFrame).Min() : 0;
             endFrame = players.Select(i => i.EndFrame).Max();
             frameCount = endFrame - beginFrame;
             length = frameCount * frameLength;

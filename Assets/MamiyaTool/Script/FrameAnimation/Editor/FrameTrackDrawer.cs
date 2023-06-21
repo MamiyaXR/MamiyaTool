@@ -8,13 +8,13 @@ using System.Linq;
 namespace MamiyaTool {
     [CustomPropertyDrawer(typeof(FrameTrackBase))]
     public class FrameTrackDrawer : PropertyDrawer {
-        private static Type[] types = AppDomain.CurrentDomain.GetAssemblies()
+        internal static Type[] types = AppDomain.CurrentDomain.GetAssemblies()
             .SelectMany(x => x.GetTypes())
             .Where(x => x.IsSubclassOf(typeof(FrameTrackBase)) && !x.IsAbstract)
             .ToArray();
-        private static string[] typenames = types.Select(x => x.Name).ToArray();
+        internal static string[] typenames = types.Select(x => x.Name).ToArray();
 
-        private static GUIContent cempty = new GUIContent(string.Empty);
+        internal static GUIContent cempty = new GUIContent(string.Empty);
 
         public override void OnGUI(Rect position, SerializedProperty property, GUIContent label) {
             EditorGUI.BeginProperty(position, label, property);
