@@ -206,6 +206,10 @@ namespace MamiyaTool {
                 animationAsset == other.animationAsset &&
                 gameObject == other.gameObject;
         }
+        public int GetRefreshHash() {
+            return unchecked(animationAsset != null ? 729 * animationAsset.GetHashCode() : 0) ^
+                (rootGameObject != null ? 27 * rootGameObject.GetHashCode() : 0);
+        }
         /*****************************************************************
          * 
          *      private method

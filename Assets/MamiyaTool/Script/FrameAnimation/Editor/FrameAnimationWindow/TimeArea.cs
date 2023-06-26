@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Reflection;
 using System.Linq;
 using UnityEditor;
@@ -134,9 +135,13 @@ namespace MamiyaTool {
             var type = dopeSheetEditorType.Value;
             return type.GetMethod("Init", flags, null, Type.EmptyTypes, null);
         });
-        static Lazy<MethodInfo> updateSpritePreviewCacheSize = new Lazy<MethodInfo>(() => {
+        static Lazy<MethodInfo> drawMasterDopelineBackground = new Lazy<MethodInfo>(() => {
             var type = dopeSheetEditorType.Value;
-            return type.GetMethod("UpdateSpritePreviewCacheSize", flags, null, Type.EmptyTypes, null);
+            return type.GetMethod("DrawMasterDopelineBackground", flags, null, new Type[] { typeof(Rect) }, null);
+        });
+        static Lazy<MethodInfo> drawBox = new Lazy<MethodInfo>(() => {
+            var type = dopeSheetEditorType.Value;
+            return type.GetMethod("DrawBox", flags, null, new Type[] { typeof(Rect), typeof(Color) }, null);
         });
         #endregion
 
@@ -297,10 +302,60 @@ namespace MamiyaTool {
 
             UpdateSpritePreviewCacheSize();
 
-            return default;
+            List<DopeLine> dopelines = state.dopelines;
+            for(int i = 0; i < dopelines.Count; ++i) {
+                DopeLine dopeLine = dopelines[i];
+
+                dopeLine.position = linePosition;
+                dopeLine.position.height = (dopeLine.tallMode ? k_DopeSheetRowHeightTall : k_DopeSheetRowHeight);
+
+                if(dopeLine.position.yMin + scrollPosition.y >= position.yMin && dopeLine.position.yMin + scrollPosition.y <= position.yMax ||
+                    dopeLine.position.yMax + scrollPosition.y >= position.yMin && dopeLine.position.yMax + scrollPosition.y <= position.yMax) {
+                    Event evt = Event.current;
+
+                    switch(evt.type) {
+                        case EventType.DragUpdated:
+                        case EventType.DragPerform:
+                            break;
+                        case EventType.ContextClick:
+                            break;
+                        case EventType.MouseDown:
+                            break;
+                        case EventType.Repaint: {
+                            DopeLineRepaint(dopeLine);
+                            break;
+                        }
+                    }
+                }
+
+                linePosition.y += dopeLine.position.height;
+            }
+
+            Rect dopelinesRect = new Rect(position.xMin, position.yMin, position.width, linePosition.yMax - position.yMin);
+
+            if(Event.current.type == EventType.Repaint)
+                ReflectionUtility.InvokeMethod(PointRenderer.GetType(), "Render", PointRenderer);
+
+            return dopelinesRect;
         }
         private void UpdateSpritePreviewCacheSize() {
             
+        }
+        private void DopeLineRepaint(DopeLine dopeline) {
+            Color oldColor = GUI.color;
+            Color color = Color.gray.AlphaMultiplied(0.05f);
+
+            // Draw background
+            if(dopeline.isMasterDopeline)
+                DrawMasterDopelineBackground(dopeline.position);
+            else
+                DrawBox(dopeline.position, color);
+        }
+        private void DrawMasterDopelineBackground(Rect position) {
+            drawMasterDopelineBackground.Value.Invoke(Value, new object[] { position });
+        }
+        private static void DrawBox(Rect position, Color color) {
+            drawBox.Value.Invoke(null, new object[] { position, color });
         }
         #endregion
 
@@ -310,6 +365,11 @@ namespace MamiyaTool {
             TimeFrame, // Time:Frame
             Frame // Integer frame
         }
+        #endregion
+
+        #region value define
+        private static readonly float k_DopeSheetRowHeight = (float)ReflectionUtility.GetField<EditorGUI>("kSingleLineHeight", null);
+        private static readonly float k_DopeSheetRowHeightTall = k_DopeSheetRowHeight * 2f;
         #endregion
     }
 }

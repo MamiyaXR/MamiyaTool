@@ -27,6 +27,9 @@ namespace MamiyaTool {
         public static Color RGBMultiplied(this Color self, float multiplier) {
             return new Color(self.r * multiplier, self.g * multiplier, self.b * multiplier, self.a);
         }
+        public static Color AlphaMultiplied(this Color self, float multiplier) {
+            return new Color(self.r, self.g, self.b, self.a * multiplier);
+        }
         public static GUIContent Temp(string t) {
             return tempInfo.Value.Invoke(null, new object[] { t }) as GUIContent;
         }

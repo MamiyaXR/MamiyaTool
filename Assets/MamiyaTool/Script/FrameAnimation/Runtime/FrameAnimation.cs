@@ -1,9 +1,7 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
-using UnityEngine.Events;
 
 namespace MamiyaTool {
     public class FrameAnimation : IDisposable {
@@ -23,8 +21,6 @@ namespace MamiyaTool {
         private bool usable;
         private float frameTimer;
         private int curFrame;
-
-        private UnityEvent onComplete;
 
         public FrameAnimationAsset Asset => asset;
         public bool PlayOnAwake => playOnAwake;
@@ -54,18 +50,15 @@ namespace MamiyaTool {
             length = frameCount * frameLength;
 
             usable = length > 0f;
-
-            onComplete = new UnityEvent();
         }
-        public void Play(UnityAction complete = null) {
+        public void Play() {
             frameTimer = 0f;
             curFrame = beginFrame;
             SetFrame(curFrame);
-            onComplete.AddListener(complete);
         }
-        public void Update(float time) {
+        public bool Update(float time) {
             if(!usable)
-                return;
+                return false;
 
             frameTimer += time;
             if(frameTimer >= frameLength) {
@@ -76,17 +69,12 @@ namespace MamiyaTool {
                     if(loop) {
                         curFrame = beginFrame;
                     } else {
-                        Stop();
-                        return;
+                        return false;
                     }
                 }
                 SetFrame(curFrame);
             }
-        }
-        public void Stop() {
-            Reset();
-            onComplete.Invoke();
-            onComplete.RemoveAllListeners();
+            return true;
         }
         public void Reset() {
             foreach(var player in players)

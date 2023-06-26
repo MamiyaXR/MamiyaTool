@@ -1,7 +1,7 @@
-﻿using UnityEngine;
+﻿using System;
+using System.Collections.Generic;
+using UnityEngine;
 using UnityEditor;
-using System.Drawing.Drawing2D;
-using System;
 
 namespace MamiyaTool {
     internal class WindowState {
@@ -17,6 +17,8 @@ namespace MamiyaTool {
         public Action<float> onFrameRateChange;
 
         private RefreshType m_Refresh = RefreshType.None;
+        private List<DopeLine> m_dopelinesCache;
+        private int m_PreviousRefreshHash;
         #endregion
 
         #region accessor
@@ -194,6 +196,20 @@ namespace MamiyaTool {
                 }
             }
         }
+        public List<DopeLine> dopelines {
+            get {
+                if(m_dopelinesCache == null) {
+                    m_dopelinesCache = new List<DopeLine>();
+                    if(activeAnimationAsset != null) {
+                        foreach(var track in activeAnimationAsset.Tracks) {
+                            DopeLine dopeLine = new DopeLine();
+                            m_dopelinesCache.Add(dopeLine);
+                        }
+                    }
+                }
+                return m_dopelinesCache;
+            }
+        }
         #endregion
 
         #region const define
@@ -208,6 +224,10 @@ namespace MamiyaTool {
          *      public method
          * 
          *****************************************************************/
+        public void OnGUI() {
+            RefreshHashCheck();
+            Refresh();
+        }
         public float TimeToPixel(float time) {
             return TimeToPixel(time, SnapMode.Disabled);
         }
@@ -258,6 +278,23 @@ namespace MamiyaTool {
          *****************************************************************/
         private void UpdateSelectionFilter() {
             m_SelectionFilter = (filterBySelection) ? (int[])Selection.instanceIDs.Clone() : null;
+        }
+        private int GetRefreshHash() {
+            return selection.GetRefreshHash();
+        }
+        private void RefreshHashCheck() {
+            int newRefreshHash = GetRefreshHash();
+            if(m_PreviousRefreshHash != newRefreshHash) {
+                refresh = RefreshType.Everything;
+                m_PreviousRefreshHash = newRefreshHash;
+            }
+        }
+        private void Refresh() {
+            if(refresh == RefreshType.Everything) {
+                m_dopelinesCache = null;
+
+                m_Refresh = RefreshType.None;
+            }
         }
         /*****************************************************************
          * 

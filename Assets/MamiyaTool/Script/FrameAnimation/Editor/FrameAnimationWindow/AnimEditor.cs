@@ -97,6 +97,8 @@ namespace MamiyaTool {
             if(!m_Initialized)
                 Initialize();
 
+            m_State.OnGUI();
+
             if(m_State.disabled && m_State.recording)
                 m_State.recording = false;
 
