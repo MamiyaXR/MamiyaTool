@@ -1,45 +1,9 @@
-﻿using System;
-using UnityEditor;
-using UnityEngine;
+﻿using UnityEngine;
 
 namespace MamiyaTool
 {
     public static class GizmosExtensions
     {
-        #region 进一步封装的绘制方法
-
-        [DrawGizmo(GizmoType.Selected | GizmoType.NonSelected)]
-        public static void DrawWireCube(BoxCollider boxCollider, GizmoType gizmosType)
-        {
-            var originColor = GUI.color;
-            GUI.color = Color.white;
-            //DrawWireCube(boxCollider.center, boxCollider.size, boxCollider.transform.rotation);
-            Vector3 center = boxCollider.transform.localToWorldMatrix * boxCollider.center;
-            center += boxCollider.transform.position;
-            Vector3 size = Vector3.Scale(boxCollider.size, boxCollider.transform.localScale);
-            DrawWireCube(center, size, boxCollider.transform.rotation);
-            GUI.color = originColor;
-        }
-
-        [DrawGizmo(GizmoType.Selected | GizmoType.NonSelected)]
-        public static void DrawWireSphere(SphereCollider sphereCollider, GizmoType gizmosType)
-        {
-            var originColor = GUI.color;
-            GUI.color = Color.white;
-            //DrawWireSphere(sphereCollider.center, sphereCollider.radius, sphereCollider.transform.rotation);
-            Vector3 center = sphereCollider.transform.localToWorldMatrix * sphereCollider.center;
-            center += sphereCollider.transform.position;
-            float radius = sphereCollider.radius * Mathf.Max(sphereCollider.transform.localScale.x,
-                                                                            sphereCollider.transform.localScale.y,
-                                                                            sphereCollider.transform.localScale.z);
-            DrawWireSphere(center, radius, sphereCollider.transform.rotation);
-            GUI.color = originColor;
-        }
-
-        #endregion
-
-        #region 基本绘制方法
-
         /// <summary>
         /// Draws a wire cube with a given rotation 
         /// </summary>
@@ -240,7 +204,5 @@ namespace MamiyaTool
 
             Gizmos.matrix = old;
         }
-
-        #endregion
     }
 }
