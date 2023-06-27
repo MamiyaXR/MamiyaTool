@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 namespace MamiyaTool {
     public class FaceToObjCtrl : MonoBehaviour {
@@ -72,7 +70,7 @@ namespace MamiyaTool {
          *      define
          * 
          **************************************************************************/
-        public enum EDirType {
+        private enum EDirType {
             Forward = 0,
             Up,
             Right,
@@ -80,7 +78,7 @@ namespace MamiyaTool {
             Down,
             Left,
         }
-        public enum EAlignType {
+        private enum EAlignType {
             World = 0,
             Target,
         }
