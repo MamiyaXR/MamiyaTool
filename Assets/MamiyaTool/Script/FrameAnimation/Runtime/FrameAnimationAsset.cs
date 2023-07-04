@@ -1,10 +1,7 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 
 namespace MamiyaTool {
-    [CreateAssetMenu(fileName = "Frame Animation")]
     public class FrameAnimationAsset : ScriptableObject {
         [SerializeReference] private List<FrameTrackBase> tracks;
         [SerializeField] private int sampleRate = 24;

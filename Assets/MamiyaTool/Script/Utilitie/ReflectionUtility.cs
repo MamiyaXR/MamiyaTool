@@ -26,7 +26,7 @@ namespace MamiyaTool {
             FieldInfo field = type.GetField(fieldName, flags);
             return field.GetValue(obj);
         }
-        public static object GetField<T>(string fieldName, object obj) {
+        public static object GetField<T>(string fieldName, T obj) {
             Type type = typeof(T);
             return GetField(type, fieldName, obj);
         }
@@ -34,7 +34,7 @@ namespace MamiyaTool {
             FieldInfo field = type.GetField(fieldName, flags);
             field.SetValue(obj, value);
         }
-        public static void SetField<T>(string fieldName, object obj, object value) {
+        public static void SetField<T>(string fieldName, T obj, object value) {
             Type type = typeof(T);
             SetField(type, fieldName, obj, value);
         }
