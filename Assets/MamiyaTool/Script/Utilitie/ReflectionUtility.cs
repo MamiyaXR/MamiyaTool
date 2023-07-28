@@ -4,23 +4,23 @@ using System.Reflection;
 namespace MamiyaTool {
     public static class ReflectionUtility {
         private static BindingFlags flags = BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Instance | BindingFlags.Static;
-        public static void InvokeStaticMethod(Type type, string methodName, Type[] types = null, object[] args = null) {
+        public static object InvokeStaticMethod(Type type, string methodName, Type[] types = null, object[] args = null) {
             types = types == null ? Type.EmptyTypes : types;
             MethodInfo method = type.GetMethod(methodName, flags, null, types, null);
-            method.Invoke(null, args);
+            return method.Invoke(null, args);
         }
-        public static void InvokeStaticMethod<T>(string methodName, Type[] types = null, object[] args = null) {
+        public static object InvokeStaticMethod<T>(string methodName, Type[] types = null, object[] args = null) {
             Type type = typeof(T);
-            InvokeStaticMethod(type, methodName, types, args);
+            return InvokeStaticMethod(type, methodName, types, args);
         }
-        public static void InvokeMethod(Type type, string methodName, object obj, Type[] types = null, object[] args = null) {
+        public static object InvokeMethod(Type type, string methodName, object obj, Type[] types = null, object[] args = null) {
             types = types == null ? Type.EmptyTypes : types;
             MethodInfo method = type.GetMethod(methodName, flags, null, types, null);
-            method.Invoke(obj, args);
+            return method.Invoke(obj, args);
         }
-        public static void InvokeMethod<T>(string methodName, object obj, Type[] types = null, object[] args = null) {
+        public static object InvokeMethod<T>(string methodName, object obj, Type[] types = null, object[] args = null) {
             Type type = typeof(T);
-            InvokeMethod(type, methodName, obj, types, args);
+            return InvokeMethod(type, methodName, obj, types, args);
         }
         public static object GetField(Type type, string fieldName, object obj) {
             FieldInfo field = type.GetField(fieldName, flags);
