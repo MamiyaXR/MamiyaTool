@@ -85,6 +85,15 @@ namespace MamiyaTool {
                 return true;
             }
         }
+        public bool clipIsEditable {
+            get {
+                if(animationAsset == null)
+                    return false;
+                if(!AssetDatabase.IsOpenForEdit(animationAsset, StatusQueryOptions.UseCachedIfPossible))
+                    return false;
+                return true;
+            }
+        }
         public bool objectIsPrefab {
             get {
                 // No gameObject selected

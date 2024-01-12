@@ -7,6 +7,7 @@ namespace MamiyaTool {
     [Serializable]
     public abstract class FrameTrackBase {
         public abstract IFramePlayer CreatePlayer(Transform root);
+        public abstract IEnumerator Enumerator { get; }
     }
 
     [Serializable]
@@ -18,5 +19,6 @@ namespace MamiyaTool {
         public bool Enable => enable;
         public string ComponentPath => componentPath;
         public List<T> Datas => frames;
+        public override IEnumerator Enumerator => frames.GetEnumerator();
     }
 }
