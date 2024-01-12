@@ -31,15 +31,15 @@ namespace MamiyaTool
         #region 单例生成器
         private static class SingletonCreator
         {
-            public static T CreateSingleton<T>() where T : class, ISingleton
+            public static TSingleton CreateSingleton<TSingleton>() where TSingleton : class, ISingleton
             {
-                Type type = typeof(T);
+                Type type = typeof(TSingleton);
                 ConstructorInfo[] ctors = type.GetConstructors(BindingFlags.Instance | BindingFlags.NonPublic);
                 ConstructorInfo ctor = Array.Find(ctors, c => c.GetParameters().Length == 0);
                 if(ctor == null)
-                    throw new Exception($"Non-Public Constructor() not found! in {typeof(T)}");
+                    throw new Exception($"Non-Public Constructor() not found! in {typeof(TSingleton)}");
 
-                T result = ctor.Invoke(null) as T;
+                TSingleton result = ctor.Invoke(null) as TSingleton;
                 result.OnSingletonInit();
                 return result;
             }
