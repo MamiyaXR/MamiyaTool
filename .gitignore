@@ -6,6 +6,8 @@
 /MamiyaTool.sln
 /.vs
 /Assembly-CSharp.csproj
+/Assembly-CSharp-firstpass.csproj
 /Assembly-CSharp-Editor.csproj
+/Assembly-CSharp-Editor-firstpass.csproj
 /ExtendedTransformInspector.csproj
 /obj

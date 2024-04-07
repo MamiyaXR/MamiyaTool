@@ -17,8 +17,10 @@ namespace MFramework {
         public int layerOffset = 100;
 
         public GameObject uiMask;
-        //public AnimPlayer apActive;
-        //public AnimPlayer apDeactive;
+#if DOTWEEN
+        public AnimPlayer apActive;
+        public AnimPlayer apDeactive;
+#endif
 
         public Window MaskedWin { get; private set; }
 
@@ -177,11 +179,13 @@ namespace MFramework {
             _state = EWindowStackState.Open;
 
             gameObject.SetActive(true);
-            //if(!imm && apActive) {
-            //    apActive.Play();
-            //} else {
-            //    // todo: 需重置状态
-            //}
+#if DOTWEEN
+            if(!imm && apActive) {
+                apActive.Play();
+            } else {
+                // todo: 需重置状态
+            }
+#endif
         }
         private void OnCloseStack() {
             if(_state != EWindowStackState.Close)
@@ -190,14 +194,16 @@ namespace MFramework {
         }
         private void DoClose(bool imm) {
             _state = EWindowStackState.Close;
-
-            //if(!imm && apDeactive) {
-            //    apDeactive.Play();
-            //    Invoke(nameof(OnCloseStack), apDeactive.Duration);
-            //} else {
-            //    gameObject.SetActive(false);
-            //}
+#if DOTWEEN
+            if(!imm && apDeactive) {
+                apDeactive.Play();
+                Invoke(nameof(OnCloseStack), apDeactive.Duration);
+            } else {
+                gameObject.SetActive(false);
+            }
+#else
             gameObject.SetActive(false);
+#endif
         }
     }
 }
