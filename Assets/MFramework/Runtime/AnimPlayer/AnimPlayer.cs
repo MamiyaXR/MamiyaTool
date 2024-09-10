@@ -18,13 +18,15 @@ namespace MFramework {
 
         public Action onPlay;
         public Action onStop;
+
+        private bool _inited = false;
         /******************************************************************
          * 
          *      lifecycle
          * 
          ******************************************************************/
         private void Awake() {
-            InitClips();
+            InitClips(false);
         }
         private void OnEnable() {
             if(autoPlay && Application.isPlaying)
@@ -41,6 +43,8 @@ namespace MFramework {
          ******************************************************************/
         public void Play() {
             Stop();
+
+            InitClips(false);
 
             foreach(var clip in clips)
                 clip.Reset();
@@ -107,9 +111,13 @@ namespace MFramework {
          *      private method
          * 
          ******************************************************************/
-        [ContextMenu("Init")]
-        private void InitClips() {
+        private void InitClips(bool absolutely) {
+            if(!absolutely && _inited)
+                return;
+
+            _inited = true;
             clips ??= new AnimClip[0];
+
             duration = 0f;
             foreach(var clip in clips) {
                 if(clip != null) {
@@ -124,16 +132,13 @@ namespace MFramework {
          * 
          ******************************************************************/
 #if UNITY_EDITOR
-        public static Action OnEditorPlay;
 #if DOTWEEN
         public static Action<Tween> OnAddTween;
 #endif
-        public static Action OnEditorStop;
         [ContextMenu("Play")]
         private void PlayInEditor() {
             gameObject.SetActive(true);
-            if(!Application.isPlaying)
-                OnEditorPlay?.Invoke();
+            InitClips(true);
             Play();
         }
         [ContextMenu("Stop")]
@@ -143,8 +148,6 @@ namespace MFramework {
                 foreach(var clip in clips)
                     clip.Reset();
             }
-            if(!Application.isPlaying)
-                OnEditorStop?.Invoke();
         }
 #endif
     }
